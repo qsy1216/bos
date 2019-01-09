@@ -27,13 +27,50 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [5,30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standard/pageQuery",
 					idField : 'id',
 					columns : columns
 				});
+				
+				//为save按钮添加点击事件
+				$("#save").click(function(){
+					
+					//alert("提交表单")
+					if( $("#standardForm").form("validate") ){
+						
+						$.post("../../standard/save", $("#standardForm").serialize(),function(res){
+							if(res.success){
+								//请求成功
+								$.messager.show({
+									title:'消息',
+									msg:res.message
+									
+								});
+								
+								//清空表单
+								$("#standardForm").get(0).reset();
+								//关闭窗口
+								$("#standardWindow").window("close");
+								//刷新列表
+								$("#grid").datagrid("reload");
+								
+							}else{
+								//请求失败
+								$.messager.show({
+									title:'消息',
+									msg:res.message
+									
+								});
+							}
+						});
+						
+					}
+					
+				});
+				
 			});	
 			
 			//工具栏
@@ -42,21 +79,66 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					
+					$("#standardWindow").window("open");
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					//获取当前datagrid选中的所有行的数组
+					var standardRows = $("#grid").datagrid("getSelections");
+					//判断用户是否只选择了一行数据
+					if(standardRows.length==1){
+						//获取选中行的数据
+						var sta = standardRows[0];
+						//打开窗口
+						$("#standardWindow").window("open");
+						//将JSON数据，填充到窗口的form中
+						$("#standardForm").form("load",sta);
+						
+						
+					}else{
+						//提示用户
+						$.messager.alert("提示信息","修改操作必须选择一条记录！","warning");
+						
+					}
 				}
 			},{
 				id : 'button-delete',
 				text : '作废',
 				iconCls : 'icon-cancel',
 				handler : function(){
-					alert('作废');
+					//alert('作废');
+                    var standardRows = $("#grid").datagrid("getSelections");
+                    //获取选中行的数据
+                    var id = standardRows[0].id;
+                    // 发送ajax请求
+					$.get("../../standard/delete",{"id":id},function (res) {
+                        if(res.success){
+                            //请求成功
+                            $.messager.show({
+                                title:'消息',
+                                msg:res.message
+
+                            });
+
+                             //刷新列表
+                             $("#grid").datagrid("reload");
+
+                        }else{
+                            //请求失败
+                            $.messager.show({
+                                title:'消息',
+                                msg:res.message
+
+                            });
+                        }
+                    })
+
+
+
 				}
 			},{
 				id : 'button-restore',
@@ -129,7 +211,7 @@
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form>
+				<form id="standardForm">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
@@ -148,7 +230,7 @@
 							<td>最小重量</td>
 							<td>
 								<input type="text" name="minWeight" 
-										class="easyui-numberbox" required="true" />
+										class="easyui-numberbox" required="true"/>
 							</td>
 						</tr>
 						<tr>
