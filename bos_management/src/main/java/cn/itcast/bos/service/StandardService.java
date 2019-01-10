@@ -9,5 +9,5 @@ public interface StandardService {
     void save(Standard standard);
     public Page<Standard> findAll(Pageable pageable);
 
-    void delete(int id);
+    void delete(int[] ids);
 }

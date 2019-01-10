@@ -111,31 +111,69 @@
 				iconCls : 'icon-cancel',
 				handler : function(){
 					//alert('作废');
-                    var standardRows = $("#grid").datagrid("getSelections");
+                    var rows = $("#grid").datagrid("getSelections");
                     //获取选中行的数据
-                    var id = standardRows[0].id;
-                    // 发送ajax请求
-					$.get("../../standard/delete",{"id":id},function (res) {
-                        if(res.success){
-                            //请求成功
-                            $.messager.show({
-                                title:'消息',
-                                msg:res.message
+                    // var id = rows[0].id;
+                    var ids =[];
+                    for (var i=0;i<rows.length;i++){
+                       ids.push(rows[i].id)
+                    }
+                    // alert(ids)
 
-                            });
+                    //发送ajax请求
+                    // $.post("../../standard/delete",{"ids":ids},function (res) {
+                    //     if(res.success){
+                    //         //请求成功
+                    //         $.messager.show({
+                    //             title:'消息',
+                    //             msg:res.message
+                    //
+                    //         });
+                    //
+                    //          //刷新列表
+                    //          $("#grid").datagrid("reload");
+                    //
+                    //     }else{
+                    //         //请求失败
+                    //         $.messager.show({
+                    //             title:'消息',
+                    //             msg:res.message
+                    //
+                    //         });
+                    //     }
+                    // })
 
-                             //刷新列表
-                             $("#grid").datagrid("reload");
 
-                        }else{
-                            //请求失败
-                            $.messager.show({
-                                title:'消息',
-                                msg:res.message
+                    $.ajax({
+                        type : 'POST',
+                        url: '../../standard/delete',
+                        traditional: true,
+                        data: {"ids": ids},
+                        success : function(res) {
+                            if(res.success){
+                                        //请求成功
+                                        $.messager.show({
+                                            title:'消息',
+                                            msg:res.message
 
-                            });
+                                        });
+
+                                         //刷新列表
+                                         $("#grid").datagrid("reload");
+
+                                    }else{
+                                        //请求失败
+                                        $.messager.show({
+                                            title:'消息',
+                                            msg:res.message
+
+                                        });
+                                    }
                         }
-                    })
+                    });
+
+
+
 
 
 

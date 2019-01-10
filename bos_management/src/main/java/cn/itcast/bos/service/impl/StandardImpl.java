@@ -29,8 +29,10 @@ public class StandardImpl implements StandardService {
     }
 
     @Override
-    public void delete(int id) {
-        standardMapper.deleteById(id);
+    public void delete(int[] ids) {
+        for (int id : ids) {
+            standardMapper.deleteById(id);
+        }
     }
 
 
