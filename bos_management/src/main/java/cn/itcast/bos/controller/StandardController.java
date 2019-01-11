@@ -46,6 +46,7 @@ public class StandardController {
         map.put("rows",pageContent);
         return map;
     }
+
     @RequestMapping("/delete")
     public ResponseResult delete(@Param(value = "ids") int[] ids){
         try {
@@ -56,5 +57,10 @@ public class StandardController {
             e.printStackTrace();
             return ResponseResult.FAIL();
         }
+    }
+
+    @RequestMapping("/findAll")
+    public List<Standard> findAll(){
+       return standardService.findALl();
     }
 }

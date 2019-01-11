@@ -81,6 +81,7 @@
 				handler : function(){
 					
 					$("#standardWindow").window("open");
+                    $("#standardForm").form("clear")
 				}
 			}, {
 				id : 'button-edit',
@@ -93,11 +94,11 @@
 					if(standardRows.length==1){
 						//获取选中行的数据
 						var sta = standardRows[0];
+                        alert(sta)
 						//打开窗口
 						$("#standardWindow").window("open");
 						//将JSON数据，填充到窗口的form中
 						$("#standardForm").form("load",sta);
-						
 						
 					}else{
 						//提示用户
@@ -119,30 +120,6 @@
                        ids.push(rows[i].id)
                     }
                     // alert(ids)
-
-                    //发送ajax请求
-                    // $.post("../../standard/delete",{"ids":ids},function (res) {
-                    //     if(res.success){
-                    //         //请求成功
-                    //         $.messager.show({
-                    //             title:'消息',
-                    //             msg:res.message
-                    //
-                    //         });
-                    //
-                    //          //刷新列表
-                    //          $("#grid").datagrid("reload");
-                    //
-                    //     }else{
-                    //         //请求失败
-                    //         $.messager.show({
-                    //             title:'消息',
-                    //             msg:res.message
-                    //
-                    //         });
-                    //     }
-                    // })
-
 
                     $.ajax({
                         type : 'POST',
@@ -171,11 +148,6 @@
                                     }
                         }
                     });
-
-
-
-
-
 
 				}
 			},{

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import java.util.List;
 
 
 @Service
@@ -33,6 +33,11 @@ public class StandardImpl implements StandardService {
         for (int id : ids) {
             standardMapper.deleteById(id);
         }
+    }
+
+    @Override
+    public List<Standard> findALl() {
+        return standardMapper.findAll();
     }
 
 
