@@ -5,6 +5,7 @@
 		<title>区域设置</title>
 		<!-- 导入jquery核心类库 -->
 		<script type="text/javascript" src="../../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../../js/ocupload/jquery.ocupload-1.1.2.js"></script>
 		<!-- 导入easyui类库 -->
 		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/icon.css">
@@ -27,6 +28,38 @@
 				alert("删除...");
 			}
 			
+			
+			// 导入
+			function doPut() {
+				// alert(1111)
+				// 给导入按钮添加点击事件
+				$("#button-import").upload({
+					name:"file",
+					action:'../../area/batchImport',
+					onSelect:function () {
+						// alert(222)
+						// 选中文件后，关闭自动提交
+						this.autoSubmit=false;
+						// 判断文件格式
+						var filename=this.filename();
+						var regex=/^.*\.(xls|xlsx)$/
+						if (regex.test(filename)){
+						    // 提交
+							this.submit();
+						}else {
+						    $.messager.alert("警告","只能上传xls,xlsx结尾的文件","warning");
+						}
+
+                    },
+					onComplete:function (response) {
+						$("#grid").datagrid("reload");
+                        alert("文件上传成功");
+                    }
+				})
+
+
+            }
+			
 			//工具栏
 			var toolbar = [ {
 				id : 'button-edit',	
@@ -46,7 +79,8 @@
 			}, {
 				id : 'button-import',
 				text : '导入',
-				iconCls : 'icon-redo'
+				iconCls : 'icon-redo',
+				handler:doPut
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -95,10 +129,10 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [5,30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/area.json",
+					url : "../../area/pageQuery",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
